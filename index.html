@@ -45,7 +45,24 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Ar
 .sosf{position:absolute;right:14px;bottom:70px}
 @keyframes p{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
 @keyframes pu{50%{transform:scale(1.08)}}
-.hidden{display:none}
+.hidden{display:none!important}
+.bd{display:inline-block;background:#E7F4EF;color:#1F6F68;font-size:12.5px;font-weight:600;border-radius:10px;padding:2px 8px;margin:4px 4px 0 0}
+.bd.gd{background:#FDF0DA;color:#7A4E0B}
+.pf b{font-size:16px}
+.app{position:relative}
+.ov{position:absolute;inset:0;background:#000;z-index:10;color:#fff;overflow:hidden}
+.ov video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.ov video.me{transform:scaleX(-1)}
+.ov .sim{position:absolute;inset:0;display:flex;align-items:flex-end;justify-content:center;padding-bottom:180px;background:radial-gradient(circle at 50% 40%,#3d5552,#141e1e);color:#cfe3df;font-size:14px}
+.ov .mask{position:absolute;left:50%;top:44%;transform:translate(-50%,-50%);border:3px solid #fff;box-shadow:0 0 0 9999px rgba(0,0,0,.62)}
+.ov .mask.face{width:64vmin;height:84vmin;max-width:260px;max-height:340px;border-radius:50%;animation:gl 1.6s ease-in-out infinite}
+.ov .mask.card{width:88vmin;height:56vmin;max-width:380px;max-height:240px;border-radius:16px}
+@keyframes gl{50%{border-color:#F2A541}}
+.ov .tt{position:absolute;top:max(28px,env(safe-area-inset-top));left:0;right:0;text-align:center;font-size:19px;font-weight:700;padding:0 56px}
+.ov .hint{position:absolute;bottom:128px;left:0;right:0;text-align:center;font-size:15px;color:#DCEBE8;padding:0 24px}
+.ov .shot{position:absolute;bottom:36px;left:50%;transform:translateX(-50%);width:74px;height:74px;border-radius:50%;border:5px solid #fff;background:#F2A541;cursor:pointer}
+.ov .x{position:absolute;top:max(18px,env(safe-area-inset-top));right:14px;background:none;border:0;color:#fff;font-size:30px;line-height:1;cursor:pointer;padding:6px}
+.ov .lock{position:absolute;bottom:8px;left:0;right:0;text-align:center;font-size:12px;color:#9fb8b4}
 </style>
 </head>
 <body>
@@ -65,6 +82,17 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Ar
 </div>
 <button class="go" id="go" type="button" aria-label="Hablar o enviar"><svg id="mic" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg><svg id="snd" class="hidden" width="22" height="22" viewBox="0 0 24 24" fill="#fff"><path d="M3 20l18-8L3 4v6l12 2-12 2z"/></svg></button>
 </form>
+<input type="file" accept="image/*,application/pdf" class="hidden" id="fk">
+<div class="ov hidden" id="ov" role="dialog" aria-label="Cámara de verificación">
+<video id="vd" playsinline muted autoplay></video>
+<div class="sim hidden" id="sim">Cámara no disponible · modo simulación</div>
+<div class="mask" id="mk"></div>
+<div class="tt" id="ot"></div>
+<div class="hint" id="oh"></div>
+<button class="x" id="ox" type="button" aria-label="Cancelar">×</button>
+<button class="shot" id="os" type="button" aria-label="Tomar foto"></button>
+<div class="lock">🔒 Demo: la foto no sale de tu teléfono</div>
+</div>
 </div>
 <script>
 var ch=document.getElementById('ch'),st=document.getElementById('st'),tx=document.getElementById('tx'),go=document.getElementById('go');
@@ -77,7 +105,7 @@ function wait(ms){return new Promise(function(r){setTimeout(r,ms)})}
 function bot(msgs,btns){S.q=S.q.then(function(){var p=Promise.resolve();msgs.forEach(function(h){p=p.then(function(){st.textContent='escribiendo…';return wait(Math.min(1500,500+h.length*8))}).then(function(){st.textContent='en línea';add(h)})});return p.then(function(){if(btns)buttons(btns)})});}
 function buttons(list){var w=document.createElement('div');w.className='bs';list.forEach(function(b){var e=document.createElement('button');e.type='button';e.textContent=b[0];if(b[2])e.className=b[2];e.onclick=function(){[].forEach.call(w.children,function(x){x.disabled=true});add(esc(b[0]),true);b[1]()};w.appendChild(e)});ch.appendChild(w);scroll()}
 function norm(t){return t.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'')}
-var MENU=[['Guardar un documento',doc],['Recetas y citas',receta],['Pedir relevo',relevo],['Pregunta de salud',salud],['SOS · emergencia',sos,'sos']];
+var MENU=[['Guardar un documento',doc],['Recetas y citas',receta],['Pedir relevo',relevo],['Quiero cuidar (verificarme)',verify],['Pregunta de salud',salud],['SOS · emergencia',sos,'sos']];
 function menu(){bot(['¿En qué te ayudo? Puedes escribirme, mandarme un audio con el micrófono o elegir:'],MENU)}
 function doc(){bot(['Mándame una foto de una receta o un documento con el clip o la cámara de abajo. Yo lo leo y tú confirmas.'],[['Usar una receta de ejemplo',function(){foto(null)}],['Ver mi bóveda',boveda]])}
 function foto(url){if(url)add('<img src="'+url+'" alt="Documento enviado">',true);else add('<img alt="Receta de ejemplo" src="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%27220%27 height=%27140%27%3E%3Crect width=%27220%27 height=%27140%27 fill=%27%23fff%27 stroke=%27%23ccc%27/%3E%3Ctext x=%2714%27 y=%2728%27 font-size=%2716%27 font-family=%27Arial%27 fill=%27%231F6F68%27 font-weight=%27bold%27%3EReceta m%C3%A9dica%3C/text%3E%3Crect x=%2714%27 y=%2744%27 width=%27180%27 height=%278%27 rx=%274%27 fill=%27%23cfd8dc%27/%3E%3Crect x=%2714%27 y=%2764%27 width=%27150%27 height=%278%27 rx=%274%27 fill=%27%23cfd8dc%27/%3E%3Crect x=%2714%27 y=%2784%27 width=%27120%27 height=%278%27 rx=%274%27 fill=%27%23cfd8dc%27/%3E%3C/svg%3E">',true);
@@ -85,7 +113,29 @@ bot(['Leí esto en la receta:<br><b>Losartán 50 mg · 1 tableta cada 12 h · 30
 function boveda(){bot(['<b>Bóveda de tu mamá</b><br>'+S.boveda.map(function(x){return '✓ '+esc(x)}).join('<br>')+'<br><span class="src">Guardados y cifrados. En una emergencia los envío solo a quien tú autorizaste.</span>'],[['Menú',menu]])}
 function receta(){bot(['<b>Aviso:</b> al Losartán de tu mamá le quedan <b>5 días</b>. Puedes surtirlo en su clínica del IMSS.'],[['¿La cita en el hospital tiene que ser presencial?',cita],['Menú',menu]])}
 function cita(){bot(['Según la información validada por el equipo de Respiro, la cita de seguimiento <b>se puede hacer en línea</b>. No necesitas llevarla.','<span class="src">Verificado por una persona del equipo · dato de ejemplo para la demo</span>'],[['Menú',menu]])}
-function relevo(){bot(['Encontré a <b>Lupita</b>, en Iztapalapa como tú. También es mamá de un niño con autismo y ya conoce sus rutinas.','Tienes <span class="hr">'+S.horas+' horas guardadas</span> por cuidar a su hijo el mes pasado.'],[['Usar 4 horas con Lupita',function(){if(S.horas<4){bot(['Te faltan horas. Te muestro una cuidadora certificada de tu colonia o un servicio público gratuito.'],[['Menú',menu]]);return}S.horas-=4;bot(['Listo, Lupita aceptó. Te quedan <span class="hr">'+S.horas+' horas</span>.','Son <b>4 horas de respiro</b>. Úsalas también para ti.'],[['Menú',menu]])}],['Ver otras opciones',function(){bot(['<b>Cuidadora certificada</b> de tu colonia (estándar CONOCER), con pago justo.','<b>Servicio público gratuito:</b> centros de cuidado del SIDECU cerca de ti.'],[['Menú',menu]])}]])}
+var R={},EXP={autismo:'Experiencia con autismo',mayor:'Experiencia con personas mayores',motriz:'Experiencia en movilidad',nino:'Experiencia con niños'};
+function relevo(){R={};bot(['Vamos a encontrar a alguien de confianza. Son 4 preguntas.','<b>1/4 · ¿A quién hay que cuidar?</b>'],[['Niño o niña con autismo',function(){R.q='autismo';r2()}],['Persona mayor',function(){R.q='mayor';r2()}],['Persona con discapacidad motriz',function(){R.q='motriz';r2()}],['Niño o niña',function(){R.q='nino';r2()}]])}
+function r2(){bot(['<b>2/4 · ¿En qué alcaldía?</b>'],['Iztapalapa','Coyoacán','Gustavo A. Madero','Usar mi ubicación'].map(function(z){return [z,function(){R.z=z=='Usar mi ubicación'?'Iztapalapa':z;r3()}]}))}
+function r3(){bot(['<b>3/4 · ¿Cuándo?</b>'],['Hoy por la tarde','Mañana de 10 a 2','Este fin de semana'].map(function(t){return [t,function(){R.t=t;r4()}]}))}
+function r4(){bot(['<b>4/4 · ¿Cómo lo quieres?</b>'],[['Banco de tiempo · gratis',banco],['Relevo pagado · cuidadora certificada',pagado],['Servicio público · gratis (SIDECU)',publico]])}
+function badges(cert){return '<span class="bd">✓ INE + selfie</span><span class="bd">✓ Sin antecedentes penales</span><span class="bd">✓ '+EXP[R.q]+'</span>'+(cert?'<span class="bd gd">✓ Certificación CONOCER</span>':'')}
+function banco(){bot(['Busqué en el <b>banco de tiempo</b>: solo cuidadoras verificadas que viven lo mismo que tú, en '+R.z+'. Tienes <span class="hr">'+S.horas+' horas guardadas</span>.','<div class="pf"><b>Lupita R.</b> · '+R.z+' · 1.2 km<br>'+(R.q=='autismo'?'Mamá de un niño con autismo':'Cuida a su familia desde hace 6 años')+'<br>'+badges()+'<br>★ 4.9 · 12 reseñas</div>','<div class="pf"><b>Carmen T.</b> · '+R.z+' · 2.0 km<br>'+badges()+'<br>★ 4.8 · 7 reseñas</div>'],[['Elegir a Lupita',function(){ok('Lupita',true)}],['Elegir a Carmen',function(){ok('Carmen',true)}]])}
+function pagado(){bot(['Cuidadoras certificadas de tu comunidad, '+R.t.toLowerCase()+':','<div class="pf"><b>María G.</b> · '+R.z+' · 1.8 km<br>'+badges(true)+'<br>★ 4.9 · 21 reseñas</div>','<span class="src">Le pagas directo a ella; Respiro cobra una comisión baja. Si falta, te conseguimos reemplazo.</span>'],[['Elegir a María',function(){ok('María',false)}],['Menú',menu]])}
+function publico(){bot(['Servicios públicos de cuidado cerca de ti según el <b>SIDECU</b>:','<div class="pf"><b>Centro de cuidado diurno</b> · '+R.z+' · 1.5 km<br>Gratis · lunes a viernes<span class="src">Dato de ejemplo para la demo</span></div>'],[['Cómo llegar',menu],['Menú',menu]])}
+function ok(n,b){var m=['Listo, <b>'+n+' aceptó</b> · '+R.t.toLowerCase()+'.'];if(b){S.horas=Math.max(0,S.horas-4);m.push('Usaste 4 horas del banco de tiempo. Te quedan <span class="hr">'+S.horas+' horas</span>.')}m.push('Tu código de inicio es <b>4 8 2 1</b>. '+n+' te lo dirá al llegar, como en las apps de transporte.','Durante el cuidado ves su ubicación y ella registra cada actividad en la bitácora. Al terminar se califican mutuamente.','Son <b>4 horas de respiro</b>. Úsalas también para ti.');bot(m,[['Menú',menu]])}
+var ov=document.getElementById('ov'),vd=document.getElementById('vd'),mk=document.getElementById('mk'),sim=document.getElementById('sim'),stream=null,onShot=null;
+function cam(mode,shape,title,hint,cb){ov.classList.remove('hidden');mk.className='mask '+shape;document.getElementById('ot').textContent=title;document.getElementById('oh').textContent=hint;onShot=cb;sim.classList.add('hidden');vd.className=mode=='user'?'me':'';
+if(navigator.mediaDevices&&navigator.mediaDevices.getUserMedia){navigator.mediaDevices.getUserMedia({video:{facingMode:mode},audio:false}).then(function(s){if(ov.classList.contains('hidden')){s.getTracks().forEach(function(t){t.stop()});return}stream=s;vd.srcObject=s}).catch(function(){sim.classList.remove('hidden')})}else sim.classList.remove('hidden')}
+function stopCam(){if(stream){stream.getTracks().forEach(function(t){t.stop()});stream=null}vd.srcObject=null;ov.classList.add('hidden')}
+document.getElementById('os').onclick=function(){var u=null;if(stream&&vd.videoWidth){var c=document.createElement('canvas');c.width=320;c.height=Math.round(320*vd.videoHeight/vd.videoWidth);var x=c.getContext('2d');if(vd.className=='me'){x.translate(c.width,0);x.scale(-1,1)}x.drawImage(vd,0,0,c.width,c.height);u=c.toDataURL('image/jpeg',.7)}stopCam();var f=onShot;onShot=null;if(f)f(u)};
+document.getElementById('ox').onclick=function(){stopCam();onShot=null;bot(['Verificación pausada. Puedes retomarla cuando quieras.'],[['Retomar',verify],['Menú',menu]])};
+function verify(){bot(['Para cuidar a otras personas en Respiro primero verifico tu identidad, como en las apps de banco. Son 4 pasos.','<span class="src">Pedimos tu consentimiento expreso. En esta demo nada sale de tu teléfono.</span>'],[['Acepto y empiezo',v1],['Menú',menu]])}
+function v1(){bot(['<b>Paso 1 de 4 · Selfie.</b> Voy a abrir tu cámara frontal. Coloca tu rostro dentro del óvalo.'],[['Abrir cámara',function(){cam('user','face','Coloca tu rostro en el óvalo','Mira al frente y parpadea',function(u){add(u?'<img src="'+u+'" alt="Selfie">':'📷 Selfie (simulación)',true);v2()})}]])}
+function v2(){bot(['✓ Prueba de vida superada.','<b>Paso 2 de 4 · INE.</b> Ahora una foto del frente de tu INE.'],[['Abrir cámara',function(){cam('environment','card','Coloca tu INE dentro del recuadro','Evita reflejos y que se vea completa',function(u){add(u?'<img src="'+u+'" alt="INE">':'🪪 INE (simulación)',true);v3()})}]])}
+function v3(){bot(['✓ Tu rostro coincide con la foto de tu INE','✓ INE vigente (servicio de verificación del INE)','✓ CURP validada con RENAPO','<b>Paso 3 de 4 · Antecedentes.</b> Sube tu constancia de antecedentes no penales (federal o de la Fiscalía CDMX).'],[['Subir constancia',function(){document.getElementById('fk').click()}],['Usar constancia de ejemplo',function(){add('<div class="dc" style="display:flex;gap:8px;align-items:center"><span style="background:#E5544B;color:#fff;font-size:11px;font-weight:700;border-radius:4px;padding:10px 6px">PDF</span>Constancia de antecedentes no penales.pdf</div>',true);v4()}]])}
+document.getElementById('fk').addEventListener('change',function(e){var f=e.target.files[0];e.target.value='';if(!f)return;add('📄 '+esc(f.name),true);v4()});
+function v4(){bot(['✓ Constancia válida. Se vuelve a revisar cada 6 meses.','<b>Paso 4 de 4 · Experiencia.</b> ¿Con quién tienes experiencia?'],[['Niños con autismo',v5],['Personas mayores',v5],['Discapacidad motriz',v5]])}
+function v5(){bot(['<b>¡Listo, estás verificada!</b><br><span class="bd">✓ Identidad</span><span class="bd">✓ Sin antecedentes</span><span class="bd">✓ Experiencia</span>','Ya puedes recibir solicitudes de relevo en tu zona: ganas horas en el banco de tiempo o cobras por tus cuidados. Para el relevo pagado te pido también tu certificación CONOCER.'],[['Menú',menu]])}
 function salud(){bot(['Pregúntame lo que quieras. Antes te aviso: <b>no soy médica ni especialista</b>. Comparto información general de fuentes oficiales y nunca recomiendo medicamentos.'],[['¿Le doy algo para el mareo?',med],['¿Cómo evito que se caiga?',caida]])}
 function med(){bot(['No soy médica ni especialista, y <b>no puedo recomendar medicamentos</b>. Pregúntale a su médico o en su clínica.','Si además tiene dolor de pecho, se desmayó o no responde, <b>llama al 911 ahora</b>.'],[['Llamar al 911',demo911,'sos'],['Menú',menu]])}
 function caida(){bot(['No soy especialista; esto es información general:<br>• Tapete antiderrapante en el baño<br>• Barras para sostenerse<br>• Buena luz de noche<br>• Que no camine sola si está mareada<span class="src">Fuente: OMS, prevención de caídas</span>'],[['Menú',menu]])}
@@ -98,6 +148,7 @@ if(/medicamento|medicina para|pastilla|dosis|le doy|darle|jarabe|ibuprofeno|para
 if(/caida|caer|caiga|mare/.test(n))return caida();
 if(/receta|surtir|se acaba/.test(n))return receta();
 if(/cita|tramite|hospital|presencial|en linea/.test(n))return cita();
+if(/verific|quiero cuidar|ofrecer|trabajo de cuidadora|ser cuidadora/.test(n))return verify();
 if(/relevo|descans|cuide|cuidar a|alguien que|horas/.test(n))return relevo();
 if(/boveda|documento|ine|curp|expediente/.test(n))return boveda();
 if(/hola|buenas|menu|ayuda/.test(n))return menu();
