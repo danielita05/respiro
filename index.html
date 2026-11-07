@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Respiro · Nadie cuida sola</title>
+<meta name="description" content="Respiro: la red inteligente de cuidados en WhatsApp. Demo interactiva.">
+<meta name="theme-color" content="#1F6F68">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 120'%3E%3Crect width='120' height='120' rx='32' fill='%231F6F68'/%3E%3Cpath d='M24 46C44 46 60 40 72 40C84 40 90 48 84 56C79 62 70 58 72 52M24 66C50 66 70 62 86 64C98 66 100 78 92 82C86 85 80 80 83 75M30 86C44 86 54 85 62 86' fill='none' stroke='%23fff' stroke-width='8' stroke-linecap='round'/%3E%3Ccircle cx='38' cy='30' r='9' fill='%23F2A541'/%3E%3C/svg%3E">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;background:#1F6F68;color:#111b21;display:flex;justify-content:center;align-items:center}
+.app{width:100%;max-width:480px;height:100%;max-height:920px;display:flex;flex-direction:column;background:#EFEAE2;overflow:hidden}
+@media (min-width:600px){.app{height:92vh;border-radius:32px;box-shadow:0 20px 60px rgba(0,0,0,.35)}}
+.demo{background:#F2A541;color:#1E2A2B;font-size:13px;text-align:center;padding:6px 10px;font-weight:600}
+.hd{background:#fff;display:flex;align-items:center;gap:10px;padding:10px 14px;border-bottom:1px solid #e9edef}
+.hd .av{width:42px;height:42px;flex:none}
+.nm{font-size:17px;font-weight:600}.st{font-size:13px;color:#667781}
+.ic{margin-left:auto;display:flex;gap:18px;color:#54656f}
+.ch{flex:1;overflow-y:auto;padding:12px 14px;display:flex;flex-direction:column;gap:6px;background-color:#EFEAE2;background-image:radial-gradient(#ddd5c8 1.2px,transparent 1.4px),radial-gradient(#e6dfd3 1px,transparent 1.2px);background-size:24px 24px,16px 16px;background-position:0 0,8px 12px}
+.dt{align-self:center;background:#fff;color:#54656f;font-size:12px;padding:4px 10px;border-radius:8px;margin:4px 0;box-shadow:0 1px 1px rgba(0,0,0,.06)}
+.m{position:relative;max-width:85%;padding:6px 9px 5px;border-radius:9px;font-size:15.5px;line-height:1.38;box-shadow:0 1px .5px rgba(11,20,26,.13);animation:p .25s ease-out;word-wrap:break-word}
+.i{align-self:flex-start;background:#fff;border-top-left-radius:0}
+.o{align-self:flex-end;background:#D9FDD3;border-top-right-radius:0}
+.i:before,.o:before{content:'';position:absolute;top:0;border-top:9px solid}
+.i:before{left:-7px;border-top-color:#fff;border-left:8px solid transparent}
+.o:before{right:-7px;border-top-color:#D9FDD3;border-right:8px solid transparent}
+.tm{float:right;margin:7px 0 -3px 10px;font-size:11px;color:#667781}
+.ck{color:#53BDEB}
+.m img{display:block;max-width:220px;border-radius:6px;margin-bottom:2px}
+.src{display:block;font-size:12.5px;color:#667781;font-style:italic;margin-top:4px}
+.hr{background:#F2A541;color:#1E2A2B;font-weight:700;border-radius:6px;padding:0 6px}
+.bs{align-self:flex-start;width:85%;display:flex;flex-direction:column;gap:3px;animation:p .25s ease-out}
+.bs button{background:#fff;border:0;color:#027EB5;font-size:15px;padding:10px;border-radius:8px;box-shadow:0 1px .5px rgba(11,20,26,.13);cursor:pointer;font-family:inherit}
+.bs button:active{background:#f0f2f5}
+.bs button.sos{background:#B3261E;color:#fff;font-weight:700}
+.bs button[disabled]{opacity:.55;cursor:default}
+.ft{display:flex;gap:6px;align-items:flex-end;padding:6px 8px 10px;padding-bottom:max(10px,env(safe-area-inset-bottom))}
+.in{flex:1;display:flex;align-items:center;gap:8px;background:#fff;border-radius:24px;padding:6px 8px 6px 12px;min-height:46px}
+.in input[type=text]{flex:1;border:0;outline:0;font-size:16px;font-family:inherit;background:transparent;min-width:0}
+.ib{background:none;border:0;color:#8696a0;cursor:pointer;display:flex;padding:4px}
+.go{width:48px;height:48px;border-radius:50%;background:#00A884;border:0;display:flex;align-items:center;justify-content:center;flex:none;cursor:pointer}
+.go.rec{background:#B3261E;animation:pu 1s infinite}
+.sosf{position:absolute;right:14px;bottom:70px}
+@keyframes p{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+@keyframes pu{50%{transform:scale(1.08)}}
+.hidden{display:none}
+</style>
+</head>
+<body>
+<div class="app">
+<div class="demo">Demo con datos de ejemplo · nada sale de tu teléfono</div>
+<div class="hd">
+<svg class="av" viewBox="0 0 120 120" aria-hidden="true"><circle cx="60" cy="60" r="60" fill="#1F6F68"/><path d="M24 46C44 46 60 40 72 40C84 40 90 48 84 56C79 62 70 58 72 52M24 66C50 66 70 62 86 64C98 66 100 78 92 82C86 85 80 80 83 75M30 86C44 86 54 85 62 86" fill="none" stroke="#fff" stroke-width="8" stroke-linecap="round"/><circle cx="40" cy="30" r="9" fill="#F2A541"/></svg>
+<div><div class="nm">Respiro</div><div class="st" id="st">en línea</div></div>
+<div class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="2" y="6" width="14" height="12" rx="2"/><path d="M16 10l6-3v10l-6-3"/></svg><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"/></svg></div>
+</div>
+<div class="ch" id="ch" aria-live="polite"><div class="dt">HOY</div></div>
+<form class="ft" id="f">
+<div class="in">
+<input type="text" id="tx" placeholder="Mensaje" autocomplete="off" aria-label="Escribe un mensaje">
+<label class="ib" aria-label="Adjuntar documento"><input type="file" accept="image/*" class="hidden" id="fa"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 11l-8.5 8.5a5 5 0 0 1-7-7L14 4a3.5 3.5 0 0 1 5 5l-8.5 8.5a2 2 0 0 1-3-3L15 7"/></svg></label>
+<label class="ib" aria-label="Tomar foto"><input type="file" accept="image/*" capture="environment" class="hidden" id="fc"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h3l2-3h6l2 3h3v12H4z"/><circle cx="12" cy="13" r="3.5"/></svg></label>
+</div>
+<button class="go" id="go" type="button" aria-label="Hablar o enviar"><svg id="mic" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg><svg id="snd" class="hidden" width="22" height="22" viewBox="0 0 24 24" fill="#fff"><path d="M3 20l18-8L3 4v6l12 2-12 2z"/></svg></button>
+</form>
+</div>
+<script>
+var ch=document.getElementById('ch'),st=document.getElementById('st'),tx=document.getElementById('tx'),go=document.getElementById('go');
+var S={horas:6,boveda:['INE y CURP','Carnet del IMSS','Diagnóstico'],q:Promise.resolve()};
+function now(){var d=new Date();return d.getHours()+':'+('0'+d.getMinutes()).slice(-2)}
+function esc(s){return s.replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+function scroll(){ch.scrollTop=ch.scrollHeight}
+function add(html,out){var d=document.createElement('div');d.className='m '+(out?'o':'i');d.innerHTML=html+'<span class="tm">'+now()+(out?' <span class="ck">✓✓</span>':'')+'</span>';ch.appendChild(d);scroll();return d}
+function wait(ms){return new Promise(function(r){setTimeout(r,ms)})}
+function bot(msgs,btns){S.q=S.q.then(function(){var p=Promise.resolve();msgs.forEach(function(h){p=p.then(function(){st.textContent='escribiendo…';return wait(Math.min(1500,500+h.length*8))}).then(function(){st.textContent='en línea';add(h)})});return p.then(function(){if(btns)buttons(btns)})});}
+function buttons(list){var w=document.createElement('div');w.className='bs';list.forEach(function(b){var e=document.createElement('button');e.type='button';e.textContent=b[0];if(b[2])e.className=b[2];e.onclick=function(){[].forEach.call(w.children,function(x){x.disabled=true});add(esc(b[0]),true);b[1]()};w.appendChild(e)});ch.appendChild(w);scroll()}
+function norm(t){return t.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'')}
+var MENU=[['Guardar un documento',doc],['Recetas y citas',receta],['Pedir relevo',relevo],['Pregunta de salud',salud],['SOS · emergencia',sos,'sos']];
+function menu(){bot(['¿En qué te ayudo? Puedes escribirme, mandarme un audio con el micrófono o elegir:'],MENU)}
+function doc(){bot(['Mándame una foto de una receta o un documento con el clip o la cámara de abajo. Yo lo leo y tú confirmas.'],[['Usar una receta de ejemplo',function(){foto(null)}],['Ver mi bóveda',boveda]])}
+function foto(url){if(url)add('<img src="'+url+'" alt="Documento enviado">',true);else add('<img alt="Receta de ejemplo" src="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%27220%27 height=%27140%27%3E%3Crect width=%27220%27 height=%27140%27 fill=%27%23fff%27 stroke=%27%23ccc%27/%3E%3Ctext x=%2714%27 y=%2728%27 font-size=%2716%27 font-family=%27Arial%27 fill=%27%231F6F68%27 font-weight=%27bold%27%3EReceta m%C3%A9dica%3C/text%3E%3Crect x=%2714%27 y=%2744%27 width=%27180%27 height=%278%27 rx=%274%27 fill=%27%23cfd8dc%27/%3E%3Crect x=%2714%27 y=%2764%27 width=%27150%27 height=%278%27 rx=%274%27 fill=%27%23cfd8dc%27/%3E%3Crect x=%2714%27 y=%2784%27 width=%27120%27 height=%278%27 rx=%274%27 fill=%27%23cfd8dc%27/%3E%3C/svg%3E">',true);
+bot(['Leí esto en la receta:<br><b>Losartán 50 mg · 1 tableta cada 12 h · 30 tabletas</b><br>¿Es correcto?'],[['Sí, es correcto',function(){S.boveda.push('Receta ('+new Date().toLocaleDateString('es-MX',{day:'numeric',month:'short'})+')');bot(['Listo, quedó en su expediente. Te aviso <b>5 días antes</b> de que se acabe.'],[['Ver mi bóveda',boveda],['Menú',menu]])}],['Corregir',function(){bot(['Claro. Dime por audio o por escrito qué dice la receta y lo corrijo. Nada se guarda sin tu “sí”.'])}]])}
+function boveda(){bot(['<b>Bóveda de tu mamá</b><br>'+S.boveda.map(function(x){return '✓ '+esc(x)}).join('<br>')+'<br><span class="src">Guardados y cifrados. En una emergencia los envío solo a quien tú autorizaste.</span>'],[['Menú',menu]])}
+function receta(){bot(['<b>Aviso:</b> al Losartán de tu mamá le quedan <b>5 días</b>. Puedes surtirlo en su clínica del IMSS.'],[['¿La cita en el hospital tiene que ser presencial?',cita],['Menú',menu]])}
+function cita(){bot(['Según la información validada por el equipo de Respiro, la cita de seguimiento <b>se puede hacer en línea</b>. No necesitas llevarla.','<span class="src">Verificado por una persona del equipo · dato de ejemplo para la demo</span>'],[['Menú',menu]])}
+function relevo(){bot(['Encontré a <b>Lupita</b>, en Iztapalapa como tú. También es mamá de un niño con autismo y ya conoce sus rutinas.','Tienes <span class="hr">'+S.horas+' horas guardadas</span> por cuidar a su hijo el mes pasado.'],[['Usar 4 horas con Lupita',function(){if(S.horas<4){bot(['Te faltan horas. Te muestro una cuidadora certificada de tu colonia o un servicio público gratuito.'],[['Menú',menu]]);return}S.horas-=4;bot(['Listo, Lupita aceptó. Te quedan <span class="hr">'+S.horas+' horas</span>.','Son <b>4 horas de respiro</b>. Úsalas también para ti.'],[['Menú',menu]])}],['Ver otras opciones',function(){bot(['<b>Cuidadora certificada</b> de tu colonia (estándar CONOCER), con pago justo.','<b>Servicio público gratuito:</b> centros de cuidado del SIDECU cerca de ti.'],[['Menú',menu]])}]])}
+function salud(){bot(['Pregúntame lo que quieras. Antes te aviso: <b>no soy médica ni especialista</b>. Comparto información general de fuentes oficiales y nunca recomiendo medicamentos.'],[['¿Le doy algo para el mareo?',med],['¿Cómo evito que se caiga?',caida]])}
+function med(){bot(['No soy médica ni especialista, y <b>no puedo recomendar medicamentos</b>. Pregúntale a su médico o en su clínica.','Si además tiene dolor de pecho, se desmayó o no responde, <b>llama al 911 ahora</b>.'],[['Llamar al 911',demo911,'sos'],['Menú',menu]])}
+function caida(){bot(['No soy especialista; esto es información general:<br>• Tapete antiderrapante en el baño<br>• Barras para sostenerse<br>• Buena luz de noche<br>• Que no camine sola si está mareada<span class="src">Fuente: OMS, prevención de caídas</span>'],[['Menú',menu]])}
+function sos(){bot(['<b>1. Llama al 911 ahora.</b>'],[['Llamar al 911',demo911,'sos'],['Ya llamé',sos2]])}
+function demo911(){bot(['En la app real este botón marca al 911. En esta demo no llama.'],[['Continuar',sos2]])}
+function sos2(){bot(['<b>2.</b> ¿Envío el expediente de tu mamá a tus contactos autorizados: Juan (hermano) y Mari (hija)?'],[['Sí, enviar',function(){bot(['Enviado. Les llega un enlace que vence en 24 h y un código por SMS para abrirlo.','<b>3.</b> Hospital que le corresponde (IMSS): <b>Centro Médico Nacional Siglo XXI</b>'],[['Menú',menu]])}],['No',menu]])}
+function route(t){var n=norm(t);
+if(/sos|emergencia|urgencia|se cayo|auxilio|no respira|no responde/.test(n))return sos();
+if(/medicamento|medicina para|pastilla|dosis|le doy|darle|jarabe|ibuprofeno|paracetamol|aspirina|remedio/.test(n))return med();
+if(/caida|caer|caiga|mare/.test(n))return caida();
+if(/receta|surtir|se acaba/.test(n))return receta();
+if(/cita|tramite|hospital|presencial|en linea/.test(n))return cita();
+if(/relevo|descans|cuide|cuidar a|alguien que|horas/.test(n))return relevo();
+if(/boveda|documento|ine|curp|expediente/.test(n))return boveda();
+if(/hola|buenas|menu|ayuda/.test(n))return menu();
+if(/salud|duele|dolor|fiebre|presion|sintoma/.test(n))return bot(['No soy médica ni especialista y no puedo diagnosticar. Para su caso, consulta a su médico. Si es grave, <b>llama al 911</b>.'],[['Menú',menu]]);
+bot(['Todavía estoy aprendiendo. Esto es lo que puedo hacer:'],MENU)}
+function send(){var t=tx.value.trim();if(!t)return;add(esc(t),true);tx.value='';tog();route(t)}
+function tog(){var h=!!tx.value.trim();document.getElementById('mic').classList.toggle('hidden',h);document.getElementById('snd').classList.toggle('hidden',!h)}
+tx.addEventListener('input',tog);
+document.getElementById('f').addEventListener('submit',function(e){e.preventDefault();send()});
+var SR=window.SpeechRecognition||window.webkitSpeechRecognition,rec=null;
+go.addEventListener('click',function(){if(tx.value.trim())return send();
+if(!SR){bot(['Tu navegador no permite dictar por voz. Escríbeme o elige una opción.'],MENU);return}
+if(rec){rec.stop();return}
+rec=new SR();rec.lang='es-MX';rec.interimResults=false;go.classList.add('rec');
+rec.onresult=function(e){var t=e.results[0][0].transcript;add('🎤 '+esc(t),true);bot(['Escuché: <i>“'+esc(t)+'”</i>']);route(t)};
+rec.onend=function(){go.classList.remove('rec');rec=null};rec.onerror=function(){go.classList.remove('rec');rec=null};rec.start()});
+function file(e){var f=e.target.files[0];if(f)foto(URL.createObjectURL(f));e.target.value=''}
+document.getElementById('fa').addEventListener('change',file);document.getElementById('fc').addEventListener('change',file);
+bot(['Hola, Rosa. Soy <b>Respiro</b> y estoy aquí para ayudarte a cuidar.','Te ayudo con documentos, recetas, citas, emergencias y a conseguir un <b>respiro</b> para ti.'],MENU);
+</script>
+</body>
+</html>
